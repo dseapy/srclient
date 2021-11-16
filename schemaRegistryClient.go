@@ -67,7 +67,7 @@ type SchemaType string
 const (
 	Protobuf SchemaType = "PROTOBUF"
 	Avro     SchemaType = "AVRO"
-	Json     SchemaType = "JSONSCHEMA"
+	Json     SchemaType = "JSON"
 )
 
 func (s SchemaType) String() string {
