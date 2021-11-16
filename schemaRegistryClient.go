@@ -646,6 +646,11 @@ func (schema *Schema) Schema() string {
 	return schema.schema
 }
 
+// SchemaType ensures access to SchemaType
+func (schema *Schema) SchemaType() *SchemaType {
+	return schema.schemaType
+}
+
 // Version ensures access to Version
 func (schema *Schema) Version() int {
 	return schema.version
