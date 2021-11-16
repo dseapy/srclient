@@ -67,7 +67,7 @@ type SchemaType string
 const (
 	Protobuf SchemaType = "PROTOBUF"
 	Avro     SchemaType = "AVRO"
-	Json     SchemaType = "JSON"
+	Json     SchemaType = "JSONSCHEMA"
 )
 
 func (s SchemaType) String() string {
@@ -104,6 +104,7 @@ type Reference struct {
 type Schema struct {
 	id         int
 	schema     string
+	schemaType *SchemaType
 	version    int
 	references []Reference
 	codec      *goavro.Codec
@@ -124,6 +125,7 @@ type schemaResponse struct {
 	Subject    string      `json:"subject"`
 	Version    int         `json:"version"`
 	Schema     string      `json:"schema"`
+	SchemaType *SchemaType `json:"schemaType"`
 	ID         int         `json:"id"`
 	References []Reference `json:"references"`
 }
@@ -204,9 +206,10 @@ func (client *SchemaRegistryClient) GetSchema(schemaID int) (*Schema, error) {
 		}
 	}
 	var schema = &Schema{
-		id:     schemaID,
-		schema: schemaResp.Schema,
-		codec:  codec,
+		id:         schemaID,
+		schema:     schemaResp.Schema,
+		schemaType: schemaResp.SchemaType,
+		codec:      codec,
 	}
 
 	if client.getCachingEnabled() {
@@ -439,6 +442,7 @@ func (client *SchemaRegistryClient) LookupSchema(subject string, schema string, 
 	var gotSchema = &Schema{
 		id:         schemaResp.ID,
 		schema:     schemaResp.Schema,
+		schemaType: schemaResp.SchemaType,
 		version:    schemaResp.Version,
 		references: schemaResp.References,
 		codec:      codec,
@@ -567,6 +571,7 @@ func (client *SchemaRegistryClient) getVersion(subject string, version string) (
 	var schema = &Schema{
 		id:         schemaResp.ID,
 		schema:     schemaResp.Schema,
+		schemaType: schemaResp.SchemaType,
 		version:    schemaResp.Version,
 		references: schemaResp.References,
 		codec:      codec,
